@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use DBI;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 sub import {
 	my $self = shift;
@@ -214,7 +214,7 @@ since you can't edit the generated classes.
  
  sub import {
      my ($self,@tables) = @_;
-     require DBI::Class::AutoLoader;
+     require Class::DBI::AutoLoader;
      Class::DBI::AutoLoader->import(
          dsn => 'dbi:mysql:application',
 		 username => 'joe',
