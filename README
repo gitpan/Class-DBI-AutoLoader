@@ -1,4 +1,4 @@
-Class/DBI/AutoLoader version 0.08
+Class/DBI/AutoLoader version 0.09
 =================================
 
 use Class::DBI::AutoLoader (
