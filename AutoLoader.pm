@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use DBI;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 sub import {
 	my $self = shift;
@@ -44,28 +44,33 @@ sub generateClass {
 	my($table,$driver,$args) = @_;
 	my $package = $args->{namespace} . '::' . table2class($table);
 	
-	my $class = "package $package;";
-	$class   .= "use strict;";
-	$class   .= "use vars '\@ISA';";
-	$class   .= "\@ISA = ('Class::DBI::$driver');";
-	$class   .= "require Class::DBI::$driver;";
+	my $class = "package $package;"
+	          . "use strict;"
+	          . "use vars '\@ISA';";
+
+	# Determine the base class
+	if(defined $args->{use_base}) {
+		$class .= "use base '$args->{use_base}';";
+	}
+	else {
+		$class .= "use base 'Class::DBI::BaseDSN';";
+	}
+
+	# Add any additional requested packages
 	foreach my $add_pkg (@{ $args->{additional_packages} }) {
 		$class .= "use $add_pkg;";
 	}
-	$class   .= "__PACKAGE__->set_db('Main',";
-	$class   .= "   '$args->{dsn}',";
-	$class   .= "   '$args->{username}',";
-	$class   .= "   '$args->{password}',";
-	$class   .= "   {";
-	$class   .= join(',', map {"$_ => '$args->{options}->{$_}'"} keys %{$args->{options}});
-	$class   .= "   });";
-	$class   .= "__PACKAGE__->set_up_table('$table');";
-	$class   .= "1;";
-	
+
+	# Finish it off
+	$class .= '1;';
 	eval($class);
 	if(my $error = $@) {
 		warn "An error occurred generating $package: $error";
 	}
+
+	# Setup the rest of the good stuff
+	$package->set_db('Main' => $args->{dsn}, $args->{username}, $args->{password}, $args->{options});
+	$package->set_up_table($table);
 }
 
 1;
@@ -142,6 +147,14 @@ out, all tables in the database will be loaded.
 The master namespace you would like your packages declared in. See the
 example above.
 
+=item * use_base
+
+If you don't specify a base class, then L<Class::DBI::BaseDSN> will be used.
+This module does explicitly use the method 'set_up_table' from the 
+L<Class::DBI::mysql>, L<Class::DBI::Pg>, and L<Class::DBI::SQLite>
+series of modules. Unless you have a module that supports, or subclasses, these
+than you won't want to use this.
+
 =item * additional_packages
 
 An array reference of additional packages you would like each class to "use".
@@ -159,7 +172,8 @@ generated class.
 
 =head1 SUPPORTED DATABASES
 
-Currently this module supports MySQL, PostgreSQL, and SQLite.
+Currently this module supports MySQL, PostgreSQL, and SQLite via
+L<Class::DBI::mysql>, L<Class::DBI::Pg>, and L<Class::DBI::SQLite>.
 
 =head1 TIPS AND TRICKS
 
@@ -201,7 +215,7 @@ since you can't edit the generated classes.
  sub import {
      my ($self,@tables) = @_;
      require DBI::Class::AutoLoader;
-     DBI::Class::AutoLoader->import(
+     Class::DBI::AutoLoader->import(
          dsn => 'dbi:mysql:application',
 		 username => 'joe',
 		 password => 'friday',
@@ -236,6 +250,11 @@ Ryan Parr, E<lt>ryanparr@thejamescompany.comE<gt>
 
 This software is based off the original work performed by
 Ikebe Tomohiro on the Class::DBI::Loader module.
+
+=head1 THANKS
+
+To Casey West for helping to hash-out what makes this module useful.
+To Mike Castle for submitting the first patch :)
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'		=> 'Class::DBI::AutoLoader',
     'VERSION_FROM'	=> 'AutoLoader.pm', # finds $VERSION
-    'PREREQ_PM'		=> { DBI => 0, 'Class::DBI' => 0 }, # e.g., Module::Name => 1.1
+    'PREREQ_PM'		=> { DBI => 0, 'Class::DBI' => 0, 'Class::DBI::BaseDSN' => 0 }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
       (AUTHOR     => 'Ryan Parr <ryanparr@thejamescompany.com>') : ()),
 );

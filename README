@@ -33,6 +33,7 @@ This module requires these other modules and libraries:
 
 DBI
 Class::DBI
+Class::DBI::BaseDSN
 
 Additionally, if you plan to use this with a MySQL database you 
 need Class::DBI::mysql. If used with a PostgreSQL database, 
@@ -42,4 +43,3 @@ COPYRIGHT AND LICENCE
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
-
