@@ -6,6 +6,7 @@ use Class::DBI::AutoLoader (
 	username  => 'username',
 	password  => 'passw0rd',
 	options   => { RaiseError => 1 },
+	tables    => [qw(list of tables)],
 	namespace => 'Data'
 );
   

@@ -1,6 +1,10 @@
 Revision history for Perl extension Class::DBI::AutoLoader.
 
-0.01  Thu Oct  9 22:38:51 2003
+0.10  Fri Oct 10 01:07:00 2003
+	- Added 'tables' option.
+	- Updated POD
+
+0.09  Thu Oct  9 22:38:51 2003
 	- original version; created by h2xs 1.22 with options
 		-AX -n Class::DBI::AutoLoader
 
